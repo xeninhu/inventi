@@ -16,50 +16,39 @@
 
     
 </head>
+
 <body>
     <div id="app">
         <!--nav class="navbar navbar-default navbar-static-top"-->
 
-        <div class="ui inverted menu navbar">
-            <div class="navbar-header">
+        <div class="ui inverted menu">
+            <div class="ui container">
+                <div class="title item">
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                            {{ config('app.name', 'Laravel') }}
+                    </a>
+                </div>            
 
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-            </div>
-
-            
-
-            <!-- Right Side Of Navbar -->
-            
-            <!-- Authentication Links -->
-            @if (!Auth::guest())
-                <div class="ui simple dropdown link item right">
-                    <span class="text">{{ Auth::user()->name }}</span>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                            <a class="item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                {{ csrf_field() }}
-                            </form>
+                <!-- Right Side Of Navbar -->
+                
+                <!-- Authentication Links -->
+                @if (!Auth::guest())
+                    <div class="ui simple dropdown link item right">
+                        <span class="text">{{ Auth::user()->name }}</span>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                                <a class="item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                        </div>
                     </div>
-                </div>
-                
-            @endif
-                
-           
+                    
+                @endif
+            </div>
         </div>
 
 
