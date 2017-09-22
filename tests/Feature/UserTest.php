@@ -41,7 +41,7 @@ class UserTest extends TestCase
             $user = User::where('email','testeautomatico@testando.com.br')
                         ->firstOrFail();//Verifica se cadastrou
             
-            $response->assertRedirect('/user/'.$user->id.'/edit');
+            $response->assertRedirect('/users/'.$user->id.'/edit');
 
             $coordination = $coordinations->shift();
             $request = [ 'id' => $user->id,
@@ -49,7 +49,7 @@ class UserTest extends TestCase
                     'coordination' => $coordination->id
                     ];
             $response = $this->actingAs($userAdmin)
-                         ->put('/user',$request); 
+                         ->put('/users',$request); 
             $user->refresh();
 
             $response->assertSuccessful();
@@ -124,7 +124,7 @@ class UserTest extends TestCase
             $request = ['id' => $user->id,
                         ];//sem nome nem coordenação
             $response = $this->actingAs($userAdmin)
-                            ->put('/user',$request);
+                            ->put('/users',$request);
             $response->assertSessionHasErrors(["name","coordination"]);
 
             $request = ['id' => $user->id,
@@ -132,7 +132,7 @@ class UserTest extends TestCase
                         'coordination' => 'texto'
                         ];//Coordenação precisa ser um id
             $response = $this->actingAs($userAdmin)
-                            ->put('/user',$request);
+                            ->put('/users',$request);
 
             $response->assertSessionHasErrors(["coordination"]);
 
@@ -143,7 +143,7 @@ class UserTest extends TestCase
                         ];//Coordenação com id inválido
             
             $response = $this->actingAs($userAdmin)
-                            ->put('/user',$request);
+                            ->put('/users',$request);
 
             $response->assertSessionHasErrors(["coordination"]);
             $request = ['id' => $user->id,
@@ -153,7 +153,7 @@ class UserTest extends TestCase
                         ];//Mudando e-mail
             
             $response = $this->actingAs($userAdmin)
-                            ->put('/user',$request);
+                            ->put('/users',$request);
             
             $user->refresh();
             

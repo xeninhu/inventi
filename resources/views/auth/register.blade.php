@@ -1,94 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Criar colaborador</div>
+<div class="ui main text container">
 
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+    <div class="ui header">Criar colaborador</div>
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Nome</label>
+    <form class="ui form error" method="POST" action="{{ route('register') }}">
+        {{ csrf_field() }}
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-mail</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group{{ $errors->has('coordination') ? ' has-error' : '' }}">
-                            <label for="coordination" class="col-md-4 control-label">Coordenação</label>
-
-                            <div class="col-md-6">
-                                <select name="coordination" id="coordination">
-                                @foreach ($coordinations as $coordination)
-                                    <option value="{{ $coordination->id }}">{{$coordination->name}}</option>
-                                @endforeach
-                                </select>
-
-                                @if ($errors->has('coordination'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('coordination') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-{{--
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Senha</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirme a senha</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
---}}
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Criar colaborador
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="field">
+            <label for="name" class="col-md-4 control-label">Nome</label>
+            <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+            
         </div>
-    </div>
+        @if ($errors->has('name'))
+            <div class="ui error message">
+                <strong>{{ $errors->first('name') }}</strong>
+            </div>
+        @endif
+        <div class="field">
+            <label for="email" class="col-md-4 control-label">E-mail</label>
+            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+            @if ($errors->has('email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+            @endif
+        </div>
+
+        <div class="field">
+            <label for="coordination" class="col-md-4 control-label">Coordenação</label>
+            <select name="coordination" id="coordination">
+            @foreach ($coordinations as $coordination)
+                <option value="{{ $coordination->id }}">{{$coordination->name}}</option>
+            @endforeach
+            </select>
+
+            @if ($errors->has('coordination'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('coordination') }}</strong>
+                </span>
+            @endif
+        </div>
+        <button type="submit" class="ui primary button">
+            Criar colaborador
+        </button>
+    </form>
+
 </div>
 @endsection
