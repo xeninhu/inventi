@@ -58,6 +58,13 @@
     <!-- Scripts -->
 <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
-
+<script language="javascript">
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+            .closest('.message')
+            .transition('fade');
+        });
+</script>
 </body>
 </html>

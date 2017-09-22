@@ -24,8 +24,9 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/register', 'Auth\RegisterController@create')->name('register');//Sobrescrevendo o register do auth, utilizando para cadastro de colaborador.
     Route::post('/register', 'Auth\RegisterController@store'); //Sobrescrevendo o register do auth, utilizando para cadastro de colaborador.
-    Route::get('/user/{user}/edit','Auth\UserController@edit');
-    Route::put('/user','Auth\UserController@update')->name('user');
+    Route::get('/users/{user}/edit','Auth\UserController@edit')->name('pagedituser');
+    Route::put('/users','Auth\UserController@update')->name('edituser');
+    Route::get('/users', 'Auth\UserController@index');
 });
 
 

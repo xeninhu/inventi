@@ -42,7 +42,7 @@
                 </span>
             @endif
         </div>
-        <button type="submit" class="ui button">
+        <button type="submit" class="ui primary button">
             Criar colaborador
         </button>
     </form>

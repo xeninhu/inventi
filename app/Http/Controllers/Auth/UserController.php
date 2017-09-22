@@ -28,9 +28,14 @@ class UserController extends Controller
         $user = User::findOrFail($idUser);
         $coordinations = Coordination::all();
         return view('auth.edituser',['user' => $user,'coordinations'=>$coordinations]);
-//        print_r($user->email);
     }
 
+    public function index() {
+        $users = User::paginate(10);
+
+        return view('auth.index', ['users' => $users]);
+    }
+    
     public function update(Request $request) {
         $data = $request->all();
         $this->validator($data)->validate();

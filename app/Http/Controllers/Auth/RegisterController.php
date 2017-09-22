@@ -87,7 +87,7 @@ class RegisterController extends Controller
         ]);*/
 
         Mail::to($data['email'])->send(new CadastroColaborador($pass));
-        return redirect("/user/$newUser->id/edit");
+        return redirect("/users/$newUser->id/edit");
     }
 
     public function create() {
