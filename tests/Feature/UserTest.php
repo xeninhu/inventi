@@ -49,14 +49,20 @@ class UserTest extends TestCase
                     'coordination' => $coordination->id
                     ];
             $response = $this->actingAs($userAdmin)
-                         ->put('/users',$request); 
-            $user->refresh();
+                         ->put('/users',$request); //Testa a alteração
+            
+            $user->refresh();//Recupera novamente o usuário no banco
 
             $response->assertSuccessful();
             $this->assertTrue($user->name==="TestCase2");
             $this->assertTrue($user->coordination->id===$coordination->id);
 
-            $user->delete();
+            $response = $this->actingAs($userAdmin)
+                         ->delete('/users/'.$user->id);
+            
+            $user = User::find($user->id);
+            $this->assertNull($user);//Certifica-se que o usuário foi removido
+
         }catch(ModelNotFoundException $e) {
             $this->fail('Usuário não foi criado no banco');
         }
@@ -65,6 +71,18 @@ class UserTest extends TestCase
             return $mail->hasTo("testeautomatico@testando.com.br");
         });
 
+    }
+
+    public function testCantEraseId1User(){ //Não pode apagar usuário de id 1.
+        $userAdmin = User::find(1);
+        $response = $this->actingAs($userAdmin)
+                         ->delete('/users/1');
+        
+        $response->assertSessionHasAll(['error']);
+        
+        $user = User::find(1);
+        $this->assertNotNull($user);
+        
     }
 
     public function testCreateUserWrongInputData() {
@@ -160,7 +178,12 @@ class UserTest extends TestCase
             $this->assertTrue($user->email==='testeautomatico2@testando.com.br');//O e-mail não deve jamais ser alterado.
             $this->assertTrue($user->name==='TestCase2');//as outras informações devem ser alteradas
 
-            $user->delete();
+            $response = $this->actingAs($userAdmin)
+                         ->delete('/users/'.$user->id);
+            
+            $user = User::find($user->id);
+            $this->assertNull($user);//Certifica-se que o usuário foi removido
+            
          }catch(ModelNotFoundException $e) {
             $this->fail('Usuário não foi criado no banco');
         }

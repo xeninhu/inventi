@@ -30,6 +30,16 @@ class UserController extends Controller
         return view('auth.edituser',['user' => $user,'coordinations'=>$coordinations]);
     }
 
+    public function destroy($id, Request $request) {
+        if($id==1) {
+            $request->session()->flash('error','O usuário de id 1 não pode ser removido.');
+            return redirect('/users');
+        }
+        User::destroy($id);
+        $request->session()->flash('from-remove',true);
+        return redirect('/users');
+    }
+
     public function index() {
         $users = User::paginate(10);
 

@@ -13,8 +13,9 @@
     <!-- Styles -->
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
-
     
+    
+
 </head>
 
 <body>
@@ -55,16 +56,45 @@
         @yield('content')
     </div>
 
+    <!--Form para função link_form_delete-->
+    <form id="form-remove" action="" method="post">
+        <input type="hidden" name="_method" value="delete" />
+        {{ csrf_field() }}
+    </form>
+    
     <!-- Scripts -->
-<script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-<script src="{{ asset('js/semantic.min.js') }}"></script>
-<script language="javascript">
-    $('.message .close')
-        .on('click', function() {
-            $(this)
-            .closest('.message')
-            .transition('fade');
-        });
-</script>
+    <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('js/semantic.min.js') }}"></script>
+    <script language="javascript">
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                .closest('.message')
+                .transition('fade');
+            });
+        /**
+        *   Função para chamar uma rota enviada através do verbo DELETE.
+        */
+        function link_form_delete(action) {
+            $('#form-remove').attr('action', action);
+            if($('.ui.mini.modal').length) { //Se existir um mini modal, use isso
+                $('.ui.mini.modal')
+                    .modal({
+                        onDeny : function() {
+                            $('#form-remove').submit();
+                        }
+                    })
+                    .modal('show');
+            }
+            else { //Senão, use o confirm do javascript
+                if(confirm('Deseja realmente remover o registro?')) {
+                     $('#form-remove').submit();
+                }
+            }
+            return false;
+        }
+        
+    </script>
+
 </body>
 </html>

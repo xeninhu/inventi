@@ -2,7 +2,24 @@
 
 @section('content')
 <div class="ui main text container">
-    
+    @if(Session::has('from-remove'))
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Sucesso!
+            </div>
+            <p>Colaborador removido com sucesso.</p>
+        </div>
+    @endif
+    @if(Session::has('error'))
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Erro!
+            </div>
+            <p>{{Session::get('error')}}</p>
+        </div>
+    @endif
     <div class="ui header">Usuários</div>
 
     <table class="ui celled table">
@@ -21,7 +38,12 @@
                     <td>
                         <a href="{{ route('pagedituser',$user->id) }}">
                             <i class="edit icon"></i>
-                        </a><i class="remove icon"></i></td>
+                        </a>
+                        <a style="cursor:pointer" onclick="link_form_delete('{{ route('deleteuser',$user->id)}}');">
+                            <i class="remove icon"></i>
+                        </a>
+                    </td>
+                       
                 </tr>
             @endforeach
             
@@ -35,4 +57,15 @@
         </table>
                 
 </div>
+@component('components.alert')
+    @slot('title')
+        Remover colaborador
+    @endslot
+    @slot('content')
+        Deseja realmente remover o colaborador selecionado?
+    @endslot
+    @slot('messageButton')
+        Remover
+    @endslot
+@endcomponent
 @endsection

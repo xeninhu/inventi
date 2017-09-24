@@ -38,7 +38,7 @@
                 <i class="right chevron icon"></i>
             </a>
         @endif
-      </div>
+    </div>
 @else
 <div class="ui right floated pagination menu">
         <a rel="prev" class="icon item disabled">
