@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="ui main text container">
+<div class="ui basic segment">
 
     <div class="ui header">Criar colaborador</div>
 

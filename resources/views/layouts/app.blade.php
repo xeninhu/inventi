@@ -13,7 +13,30 @@
     <!-- Styles -->
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
-    
+    <style>
+        .sidebar-container {
+            width: 260px;
+            overflow: hidden;
+            height: 100%;
+            position: fixed;
+            margin: 0;
+            top: 0;
+            left: 0;
+        }
+        .pusher {
+            padding-left: 260px;
+        }
+
+        .pusher {
+            margin-bottom: 80px;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 0 !important }
+        .sidebar { -ms-overflow-style: none; }
+        .sidebar { overflow: -moz-scrollbars-none; }
+        .menu   {margin: 0 !important;}
+    </style>
+
     
 
 </head>
@@ -50,10 +73,32 @@
                     
                 @endif
             </div>
+        
+        
         </div>
-
-
-        @yield('content')
+         @if (!Auth::guest())
+        <div class="ui bottom attached segment pushable">
+            <div class=".sidebar-container">
+            <div class="ui visible inverted left vertical sidebar menu">
+                <a class="item" href="{{route('indexuser')}}">
+                    <i class="users icon"></i> Colaborador
+                </a>
+                <a class="item">
+                    <i class="laptop icon"></i>Item de inventário
+                </a>
+            </div>
+            </div>
+            <div class="pusher">
+                <div class="ui container">
+                    @yield('content')
+                </div>
+            </div>
+        </div>
+        @else
+            @yield('content')
+        @endif
+        
+        
     </div>
 
     <!--Form para função link_form_delete-->
