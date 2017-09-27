@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="ui main text container">
+<div class="ui basic segment">
     @isset($successMessage)
         <div class="ui success message">
             <i class="close icon"></i>

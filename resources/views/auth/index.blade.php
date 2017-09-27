@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="ui main text container">
+<div class="ui basic segment">
     @if(Session::has('from-remove'))
         <div class="ui success message">
             <i class="close icon"></i>
@@ -20,8 +20,20 @@
             <p>{{Session::get('error')}}</p>
         </div>
     @endif
-    <div class="ui header">Usuários</div>
-
+    <div class="ui grid">
+        <div class="left floated left aligned six wide column">
+            <div class="ui header">
+                Usuários
+            </div>
+        </div>
+        <div class="right floated right aligned six wide column">
+            <div class="ui label">
+                <a href="{{route('register')}}">
+                    <i class="add icon label"></i>Adicionar usuário
+                </a>
+            </div>
+        </div>
+    </div>
     <table class="ui celled table">
         <thead>
             <tr>
