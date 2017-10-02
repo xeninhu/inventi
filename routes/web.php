@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::put('/users','Auth\UserController@update')->name('edituser');
     Route::get('/users', 'Auth\UserController@index')->name('indexuser');
     Route::delete('/users/{id}','Auth\UserController@destroy')->name('deleteuser');
+    Route::resource('itens', 'ItensController');
 });
 
 
