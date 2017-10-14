@@ -5,12 +5,22 @@
 
     <div class="ui header">Criar Item</div>
 
-    <form class="ui form error" method="POST" action="{{-- route('createitem') --}}">
+    <form class="ui form error" method="POST" action="{{route('itens.store')}}">
         {{ csrf_field() }}
+
+
+        <div class="ui field search">
+            <label for="type" class="col-md-4 control-label">Tipo do item</label>
+            <div class="ui icon input">
+                <input class="prompt" type="text" name="item_type" value="{{ old('item_type') }}" placeholder="Iremos buscar caso o item já exista..." required autofocus>
+                <i class="search icon"></i>
+            </div>
+            <div class="results"></div>
+        </div>
 
         <div class="field">
             <label for="item" class="col-md-4 control-label">Item</label>
-            <input id="item" type="text" class="form-control" name="item" value="{{ old('item') }}" required autofocus>
+            <input id="item" type="text" class="form-control" name="item" value="{{ old('item') }}" required>
         </div>
         @if ($errors->has('item'))
             <div class="ui error message">
@@ -47,4 +57,21 @@
     </form>
 
 </div>
+@endsection
+
+@section('scripts')
+$('.ui.search')
+  .search({
+    apiSettings: {
+      url: '/item_types/{query}'
+    },
+    fields: {
+      results : 'results',
+      title   : 'title',
+    },
+    error: {
+      noResults: 'Esse tipo será cadastrado'
+    },
+    minCharacters : 4
+  });
 @endsection

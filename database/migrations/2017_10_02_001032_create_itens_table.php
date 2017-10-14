@@ -19,7 +19,7 @@ class CreateItensTable extends Migration
             $table->string('item');
             
             //Colaborador com o item
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')
                 ->on('users')
                 ->onDelete('restrict')

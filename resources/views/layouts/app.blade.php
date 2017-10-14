@@ -139,6 +139,7 @@
             return false;
         }
         
+        @yield('scripts')
     </script>
 
 </body>
