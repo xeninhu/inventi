@@ -77,7 +77,7 @@ class ItensController extends Controller
 
         $item->save();
 
-        return redirect('itens/create');
+        return redirect("itens/$item->id/edit");
 
     }
 

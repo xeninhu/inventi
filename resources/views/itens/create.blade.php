@@ -12,7 +12,7 @@
         <div class="ui field search">
             <label for="type" class="col-md-4 control-label">Tipo do item</label>
             <div class="ui icon input">
-                <input class="prompt" type="text" name="item_type" value="{{ old('item_type') }}" placeholder="Iremos buscar caso o item já exista..." required autofocus>
+                <input class="prompt" type="text" name="item_type" value="{{ old('item_type') }}" placeholder="Iremos buscar caso o tipo já exista..." required autofocus>
                 <i class="search icon"></i>
             </div>
             <div class="results"></div>
