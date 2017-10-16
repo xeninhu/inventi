@@ -18,14 +18,42 @@ class ItensController extends Controller
     * @param  array  $data
     * @return \Illuminate\Contracts\Validation\Validator
     */
-    protected function validator(array $data)
+    protected function validator(array $data,$id=false)
     {
-        return Validator::make($data, [
+        $rules = [
             'item_type' => 'required|string|max:255',
             'item' => 'required|string|max:255',
-            'patrimony_number' => 'required|integer|unique:itens',
             'coordination' => 'required|integer|exists:coordinations,id'
-        ]);
+        ];
+        if(!$id)
+            $rules['patrimony_number'] = 'required|integer|unique:itens';
+        else
+            $rules['patrimony_number'] = "required|integer|unique:itens,patrimony_number,$id";
+
+        return Validator::make($data, $rules);
+    }
+
+    //update e store possuem esse mesmo trecho de código. Aqui eu altero o item com os dados vindos do template
+    private function fillItem(&$item,$request) {
+
+        $data = $request->all();
+
+        $item->fill($request->only(['patrimony_number','item']));
+
+        $item->coordination()->associate(Coordination::find($data["coordination"]));
+
+         //Verifica se o tipo já existe, senão existe insere.
+        try {
+            $type = ItemType::where("type","=",$data["item_type"])->firstOrFail();
+        }catch(ModelNotFoundException $e) {
+            $type = new ItemType();
+            $type->type = $data["item_type"];
+            $type->save();
+        }
+
+        $item->type()->associate($type);
+
+        return $item;
     }
 
     /**
@@ -57,26 +85,14 @@ class ItensController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $this->validator($data)->validate();
+        $this->validator($request->all())->validate();
 
         $item = new Item();
-        $item->fill($request->only(['patrimony_number','item']));
-        $item->coordination()->associate(Coordination::find($data["coordination"]));
-        
-        //Verifica se o tipo já existe, senão existe insere.
-        try {
-            $type = ItemType::where("type","=",$data["item_type"])->firstOrFail();
-        }catch(ModelNotFoundException $e) {
-            $type = new ItemType();
-            $type->type = $data["item_type"];
-            $type->save();
-        }
 
-        $item->type()->associate($type);
-
+        $this->fillItem($item,$request);
         $item->save();
-
+        
+        $request->session()->flash('successMessage','Item cadastrado com sucesso');
         return redirect("itens/$item->id/edit");
 
     }
@@ -100,8 +116,13 @@ class ItensController extends Controller
      */
     public function edit($id)
     {
-        //
+        $item = Item::find($id);
+        $coordinations = Coordination::all();
+
+        return view("itens.edit",['item'=>$item,'coordinations'=>$coordinations]);
     }
+
+    
 
     /**
      * Update the specified resource in storage.
@@ -112,7 +133,17 @@ class ItensController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validator($request->all(),$id)->validate();
+
+        $item = Item::findOrFail($id);
+
+        $this->fillItem($item,$request);
+        
+        $item->save();
+
+        $request->session()->flash('successMessage','Item atualizado com sucesso');
+        return redirect("itens/$item->id/edit");
+
     }
 
     /**

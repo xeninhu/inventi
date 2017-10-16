@@ -44,6 +44,25 @@ class ItemTest extends TestCase
             $this->assertTrue($item->item==="Item de teste");
             $this->assertTrue($item->coordination->id===$coordination->id);
 
+            $coordination = $coordinations->shift();
+            $request = [ 'item_type'=> 'Tipo teste 2',
+                    'item' => 'Item de teste 222',
+                    'patrimony_number' => 333444222,
+                    'coordination' => $coordination->id
+                    ];
+            $response = $this->actingAs($userAdmin)
+                         ->put("/itens/$item->id",$request); //Testa a alteração
+            
+            $item->refresh();//Recupera novamente o usuário no banco
+            $item->load('type');
+            $item->load('coordination');
+
+            $response->assertStatus(302);//Verifica se foi redirecionado
+            $this->assertTrue($item->type->type==="Tipo teste 2");
+            $this->assertTrue($item->item==="Item de teste 222");
+            $this->assertTrue($item->patrimony_number===333444222);
+            $this->assertTrue($item->coordination->id===$coordination->id);
+
             //Removendo tudo
             $type = $item->type;
             $item->type()->dissociate();
