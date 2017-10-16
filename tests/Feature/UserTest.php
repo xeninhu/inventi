@@ -52,8 +52,9 @@ class UserTest extends TestCase
                          ->put('/users',$request); //Testa a alteração
             
             $user->refresh();//Recupera novamente o usuário no banco
+            $user->load('coordination');
 
-            $response->assertSuccessful();
+            $response->assertStatus(302);//Verifica se foi redirecionado
             $this->assertTrue($user->name==="TestCase2");
             $this->assertTrue($user->coordination->id===$coordination->id);
 

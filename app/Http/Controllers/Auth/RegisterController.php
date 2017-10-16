@@ -87,6 +87,7 @@ class RegisterController extends Controller
         ]);*/
 
         Mail::to($data['email'])->send(new CadastroColaborador($pass));
+        $request->session()->flash('successMessage','Colaborador criado com sucesso');
         return redirect("/users/$newUser->id/edit");
     }
 

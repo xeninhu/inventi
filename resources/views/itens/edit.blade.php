@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="ui basic segment">
-    @isset($successMessage)
+    @if(Session::has('successMessage'))
         <div class="ui success message">
             <i class="close icon"></i>
             <div class="header">
                 Sucesso!
             </div>
-            <p>Item atualizado com sucesso.</p>
+            <p>{{Session::get('successMessage')}}</p>
         </div>
     @endif
 
@@ -45,14 +45,13 @@
                 </span>
             @endif
         </div>
-
         <div class="field">
             <label for="coordination" class="col-md-4 control-label">Coordenação</label>
             <select name="coordination" id="coordination">
             @foreach ($coordinations as $coordination)
                 <option value="{{ $coordination->id }}"
                 @if ( ($coordination->id===$item->coordination->id && !$errors->any())
-                      || ($coordination->id===old('coordination') && $errors->any())
+                      || ($coordination->id==old('coordination') && $errors->any())
                     ) selected @endif >
                     {{$coordination->name}}</option>
             @endforeach

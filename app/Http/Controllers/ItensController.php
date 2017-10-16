@@ -33,7 +33,7 @@ class ItensController extends Controller
         return Validator::make($data, $rules);
     }
 
-    //update e store possuem esse mesmo trecho de código.
+    //update e store possuem esse mesmo trecho de código. Aqui eu altero o item com os dados vindos do template
     private function fillItem(&$item,$request) {
 
         $data = $request->all();
@@ -90,23 +90,9 @@ class ItensController extends Controller
         $item = new Item();
 
         $this->fillItem($item,$request);
-
-        /*$item->fill($request->only(['patrimony_number','item']));
-        $item->coordination()->associate(Coordination::find($data["coordination"]));
-        
-        //Verifica se o tipo já existe, senão existe insere.
-        try {
-            $type = ItemType::where("type","=",$data["item_type"])->firstOrFail();
-        }catch(ModelNotFoundException $e) {
-            $type = new ItemType();
-            $type->type = $data["item_type"];
-            $type->save();
-        }
-
-        $item->type()->associate($type);
-        */
         $item->save();
-
+        
+        $request->session()->flash('successMessage','Item cadastrado com sucesso');
         return redirect("itens/$item->id/edit");
 
     }
@@ -155,6 +141,7 @@ class ItensController extends Controller
         
         $item->save();
 
+        $request->session()->flash('successMessage','Item atualizado com sucesso');
         return redirect("itens/$item->id/edit");
 
     }
