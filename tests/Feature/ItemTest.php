@@ -64,12 +64,13 @@ class ItemTest extends TestCase
             $this->assertTrue($item->coordination->id===$coordination->id);
 
             //Removendo tudo
-            $type = $item->type;
-            $item->type()->dissociate();
-            $item->delete();
-            $type->delete();
-            
 
+            $response = $this->actingAs($userAdmin)
+                         ->delete('/itens/'.$item->id);
+            
+            $item = User::find($item->id);
+            $this->assertNull($item);//Certifica-se que o usuário foi removido
+            
 
         }catch(ModelNotFoundException $e) {
             $this->fail('Item não foi criado no banco');
