@@ -8,6 +8,8 @@ use App\Coordination;
 use App\Item;
 use App\ItemType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Util\SearchObject;
+use App\User;
 
 class ItensController extends Controller
 {
@@ -63,7 +65,9 @@ class ItensController extends Controller
      */
     public function index()
     {
-        //
+        $itens = Item::paginate(10);
+
+        return view('itens.index',['itens'=>$itens]);
     }
 
     /**
@@ -152,8 +156,52 @@ class ItensController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
-        //
+        Item::destroy($id);
+        $request->session()->flash('from-remove',true);
+        return redirect('/itens');
     }
+
+    public function moveItensToUserPage() {
+        return view('itens.moving');
+    }
+
+    public function moveItensToUser(Request $request) {
+        
+        //return $request->all();
+
+        $user_id = $request->user;
+        $user = User::find($user_id);
+        $itens_id = explode(",",$request->itens);
+        $wrong_ids = array();
+        $correct_itens = array();
+        foreach($itens_id as $item_id) {
+            try {
+                $item = Item::findOrFail($item_id);
+                $item->user()->associate($user);
+                $item->save();
+                $correct_itens[] = $item;
+            }catch(ModelNotFoundException $e) {
+                $wrong_ids[] = $item_id;
+            }
+        }
+        
+        $session = $request->getSession();
+        if(!empty($wrong_ids))
+            $session->flash('wrong_ids',true);
+        if(!empty($correct_itens)) {
+            $session->flash('correct_itens',$correct_itens);
+            $session->flash('user',$user);
+        }
+
+        return redirect('/itens/move');
+    }
+
+    public function search($patrimony_number) {
+        $itens = Item::where('patrimony_number','like',"%$patrimony_number%")->get();
+        $search_object = new SearchObject($itens,'patrimony_number','id');
+        return response()->json($search_object);
+    }
+    //$user_id,$patrimonys_id
 }

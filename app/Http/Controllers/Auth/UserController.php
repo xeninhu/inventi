@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Coordination;
+use App\Util\SearchObject;
 
 class UserController extends Controller
 {
@@ -62,4 +63,11 @@ class UserController extends Controller
         return redirect("/users/$user->id/edit");
         //return view('auth.edituser',['user' => $user,'coordinations'=>$coordinations,'successMessage'=>'Usuário atualizado com sucesso']);
     }
+
+    public function search($name='%') {
+        $users = User::where('name','like',"%$name%")->get();
+        $search_object = new SearchObject($users,'name','id');
+        return response()->json($search_object);
+    }
+
 }

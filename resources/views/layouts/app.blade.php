@@ -83,7 +83,7 @@
                 <a class="item" href="{{route('indexuser')}}">
                     <i class="users icon"></i> Colaborador
                 </a>
-                <a class="item" href="{{route('itens.create')}}">
+                <a class="item" href="{{route('itens.index')}}">
                     <i class="laptop icon"></i>Item de inventário
                 </a>
             </div>
