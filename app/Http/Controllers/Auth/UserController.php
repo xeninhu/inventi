@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Coordination;
 use App\Util\SearchObject;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -64,8 +65,24 @@ class UserController extends Controller
         //return view('auth.edituser',['user' => $user,'coordinations'=>$coordinations,'successMessage'=>'Usuário atualizado com sucesso']);
     }
 
+    /**
+    *   Lista usuários para administradores e coordenadores. Caso o usuário logado seja coordenador,
+    *   retorna apenas usuários da coordenação.
+    */
     public function search($name='%') {
-        $users = User::where('name','like',"%$name%")->get();
+        $user_admin = Auth::user();
+        $coordination = $user_admin->coordinator; //Pega a coordenação ou false se não for coordenador
+        if(!$user_admin->admin && !$user_admin->coordinator)
+            return response([
+                "message" => "Você precisa ser adminstrador ou coordenador para acessar essa busca"
+                ],401);
+        if($user_admin->admin)        
+            $users = User::where('name','like',"%$name%")->get();
+        else
+            $users = User::where('name','like',"%$name%")
+            ->where('coordination_id',$coordination->id)
+            ->get();
+        
         $search_object = new SearchObject($users,'name','id');
         return response()->json($search_object);
     }

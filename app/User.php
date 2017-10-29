@@ -30,4 +30,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+    * Se for coordenador, retorna a coordenação, senão retorna false
+    */
+    public function getCoordinatorAttribute() {
+        if($this->coordination->coordinator->id===$this->id)
+            return $this->coordination;
+        else
+            return false;
+    }
 }

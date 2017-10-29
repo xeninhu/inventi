@@ -10,6 +10,7 @@ use App\ItemType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Util\SearchObject;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class ItensController extends Controller
 {
@@ -167,12 +168,31 @@ class ItensController extends Controller
         return view('itens.moving');
     }
 
+    /**
+    *   Movimenta itens para um usuário. Os itens devem vir como string de ids separados por virgula
+    *   enquanto o usuário apenas com o id.
+    *
+    *   Coordenador só poderá movimentar itens da coordenação dele, para usuários da sua coordenação. Usuários comuns
+    *   que não são coordenadores não terão acesso a movimentação direta dos itens.
+    *
+    *   Caso o usuário logado não for o usuário afetado com a movimentação, um e-mail deverá ser enviado.
+    */
+
     public function moveItensToUser(Request $request) {
         
-        //return $request->all();
+        $logged_user = Auth::user();
+        $coordination = $logged_user->coordinator; //Pega a coordenação ou false se não for coordenador
+        
+        if(!$logged_user->admin && !$logged_user->coordinator)
+           return abort(401,"Você precisa ser adminstrador ou coordenador para acessar essa busca");
 
+        
         $user_id = $request->user;
         $user = User::find($user_id);
+
+        if(!$logged_user->admin && $coordination->id!==$user->coordination->id)
+                return abort(401,"Coordenador só pode atribuir itens a colaboradores de sua coordenação");
+
         $itens_id = explode(",",$request->itens);
         $wrong_ids = array();
         $correct_itens = array();
@@ -198,10 +218,28 @@ class ItensController extends Controller
         return redirect('/itens/move');
     }
 
+
+    /**
+    *   Lista patrimônios para coordenadores ou admins. Caso perfil logado seja coordenador,
+    *   lista apenas patrimônios da coordenação, se for admin lista qualquer um.
+    */
+
     public function search($patrimony_number) {
-        $itens = Item::where('patrimony_number','like',"%$patrimony_number%")->get();
+        $logged_user = Auth::user();
+        $coordination = $logged_user->coordinator; //Pega a coordenação ou false se não for coordenador
+        if(!$logged_user->admin && !$logged_user->coordinator)
+            return response([
+                "message" => "Você precisa ser adminstrador ou coordenador para acessar essa busca"
+                ],401);
+        
+        if(!$logged_user->admin)  //Não é admin, é coordenador.
+            $itens = Item::where('patrimony_number','like',"%$patrimony_number%")
+                ->where('coordination_id',$coordination->id)
+                ->get();
+        else //Admin pega qualquer item
+            $itens = Item::where('patrimony_number','like',"%$patrimony_number%")->get();
+
         $search_object = new SearchObject($itens,'patrimony_number','id');
         return response()->json($search_object);
     }
-    //$user_id,$patrimonys_id
 }
