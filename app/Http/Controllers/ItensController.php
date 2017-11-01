@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Util\SearchObject;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\MovingItens;
+use Illuminate\Support\Facades\Mail;
 
 class ItensController extends Controller
 {
@@ -180,28 +182,33 @@ class ItensController extends Controller
 
     public function moveItensToUser(Request $request) {
         
+        $wrong_ids = array();
+        $correct_itens = array();
+        $from_user = array();//Armazeno itens que já são do usuário e não precisam ser movidos
+
         $logged_user = Auth::user();
         $coordination = $logged_user->coordinator; //Pega a coordenação ou false se não for coordenador
-        
         if(!$logged_user->admin && !$logged_user->coordinator)
            return abort(401,"Você precisa ser adminstrador ou coordenador para acessar essa busca");
-
         
         $user_id = $request->user;
         $user = User::find($user_id);
-
         if(!$logged_user->admin && $coordination->id!==$user->coordination->id)
                 return abort(401,"Coordenador só pode atribuir itens a colaboradores de sua coordenação");
 
         $itens_id = explode(",",$request->itens);
-        $wrong_ids = array();
-        $correct_itens = array();
+        
         foreach($itens_id as $item_id) {
             try {
                 $item = Item::findOrFail($item_id);
-                $item->user()->associate($user);
-                $item->save();
-                $correct_itens[] = $item;
+                if($item->user!=null && $item->user->id===$user->id) {
+                    $from_user[] = $item;
+                }
+                else {
+                    $item->user()->associate($user);
+                    $item->save();
+                    $correct_itens[] = $item;
+                }
             }catch(ModelNotFoundException $e) {
                 $wrong_ids[] = $item_id;
             }
@@ -210,10 +217,19 @@ class ItensController extends Controller
         $session = $request->getSession();
         if(!empty($wrong_ids))
             $session->flash('wrong_ids',true);
-        if(!empty($correct_itens)) {
-            $session->flash('correct_itens',$correct_itens);
+        
+        if(!empty($correct_itens) || !empty($from_user)) {
             $session->flash('user',$user);
+            if(!empty($correct_itens)) {
+                $session->flash('correct_itens',$correct_itens);
+                Mail::to($user->email)->send(new MovingItens($correct_itens));
+            }
+            if(!empty($from_user)) 
+                $session->flash('from_user',$from_user);
         }
+            
+       
+        
 
         return redirect('/itens/move');
     }

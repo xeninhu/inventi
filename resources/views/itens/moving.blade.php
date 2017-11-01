@@ -17,7 +17,20 @@
             </ul>
         </div>
     @endif
-
+    @if(Session::has('from_user'))
+        <div class="ui warning message">
+            <i class="close icon"></i>
+            <div class="header">
+                Atenção!
+            </div>
+            <p>Os seguintes itens já estavam atribuídos ao usuário {{(Session::get('user'))->name}} e nenhuma ação foi tomada</p>
+            <ul>
+                @foreach(Session::get('from_user') as $item)
+                    <li>{{$item->patrimony_number}} - {{$item->item}}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @if(Session::has('wrong_ids'))
         <div class="ui error message">
             <i class="close icon"></i>

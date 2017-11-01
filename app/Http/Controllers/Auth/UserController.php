@@ -62,7 +62,7 @@ class UserController extends Controller
         $coordinations = Coordination::all();
         $request->session()->flash('successMessage','Colaborador atualizado com sucesso');
         return redirect("/users/$user->id/edit");
-        //return view('auth.edituser',['user' => $user,'coordinations'=>$coordinations,'successMessage'=>'Usuário atualizado com sucesso']);
+
     }
 
     /**
