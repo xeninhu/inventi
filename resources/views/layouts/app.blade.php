@@ -88,6 +88,9 @@
                         <i class="laptop icon"></i>Item de inventário
                     </a>
                 @endif
+                <a class="item" href="{{route('move-requests.create')}}">
+                    <i class="shipping icon"></i>Solicitar movimentação de item
+                </a>
             </div>
             </div>
             <div class="pusher">
