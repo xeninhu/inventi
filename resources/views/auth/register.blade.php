@@ -8,6 +8,13 @@
     <form class="ui form error" method="POST" action="{{ route('register') }}">
         {{ csrf_field() }}
 
+         <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="admin" value='1' @if (old('admin')!==null) checked @endif>
+                <label><b>Usuário Administrador</b></label>
+            </div>
+        </div>
+
         <div class="field">
             <label for="name" class="col-md-4 control-label">Nome</label>
             <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
@@ -27,7 +34,6 @@
                 </span>
             @endif
         </div>
-
         <div class="field">
             <label for="coordination" class="col-md-4 control-label">Coordenação</label>
             <select name="coordination" id="coordination">
@@ -42,6 +48,7 @@
                 </span>
             @endif
         </div>
+       
         <button type="submit" class="ui primary button">
             Criar colaborador
         </button>

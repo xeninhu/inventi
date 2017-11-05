@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\User;
 
 class AddAdminToUserTable extends Migration
 {
@@ -17,6 +18,10 @@ class AddAdminToUserTable extends Migration
             $table->boolean('admin')
                 ->default(false);
         });
+        //Define usuário 1 como administrador
+        $user = User::find(1);
+        $user->admin = true;
+        $user->save();
     }
 
     /**

@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password'
+        'name', 'email', 'password', 'admin'
     ];
 
     public function coordination()
@@ -39,5 +39,13 @@ class User extends Authenticatable
             return $this->coordination;
         else
             return false;
+    }
+
+    public function setAdminAttribute($value) {
+        $this->attributes['admin'] = $value?true:false;
+    }
+
+    public function getAdminAttribute($value) {
+        return $value?true:false;
     }
 }
