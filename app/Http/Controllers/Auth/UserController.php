@@ -53,7 +53,7 @@ class UserController extends Controller
         $this->validator($data)->validate();
         $user = User::findOrFail($data["id"]);
        
-        $user->fill($request->only(['name']));
+        $user->fill($request->only(['name','admin']));
        
         $user->coordination()->associate(Coordination::find($data["coordination"]));
 

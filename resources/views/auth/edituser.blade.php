@@ -20,6 +20,13 @@
         <input type="hidden" name="id" value="{{$user->id}}" />
 
         <div class="field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" name="admin" value='1' {{$errors->any()?((old('admin')!==null)?'checked':'') : $user->admin?'checked':'' }} >
+                <label><b>Usuário Administrador</b></label>
+            </div>
+        </div>
+
+        <div class="field">
             <label for="name" class="col-md-4 control-label">Nome</label>
             
             <input id="name" type="text" class="form-control" name="name" value="{{$errors->any()? old('name'):$user->name }}" required autofocus>
