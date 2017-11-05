@@ -80,12 +80,14 @@
         <div class="ui bottom attached segment pushable">
             <div class=".sidebar-container">
             <div class="ui visible inverted left vertical sidebar menu">
-                <a class="item" href="{{route('indexuser')}}">
-                    <i class="users icon"></i> Colaborador
-                </a>
-                <a class="item" href="{{route('itens.index')}}">
-                    <i class="laptop icon"></i>Item de inventário
-                </a>
+                @if (Auth::user()->admin)
+                    <a class="item" href="{{route('indexuser')}}">
+                        <i class="users icon"></i> Colaborador
+                    </a>
+                    <a class="item" href="{{route('itens.index')}}">
+                        <i class="laptop icon"></i>Item de inventário
+                    </a>
+                @endif
             </div>
             </div>
             <div class="pusher">

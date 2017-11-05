@@ -15,13 +15,16 @@
 /*Route::get('/', function () {
     return view('welcome');
 });*/
-Route::get('/', 'HomeController@index')->name('home');
 
+Route::get('/', 'HomeController@index')
+    ->name('home')
+    ->middleware('auth');
 /**
     Rotas para login, troca de senha e criação de usuários aproveitando o register do auth
 */
 Auth::routes();
-Route::group(['middleware' => 'auth'], function() {
+
+Route::group(['middleware' => ['auth','admin']], function() {
     Route::get('/register', 'Auth\RegisterController@create')->name('register');//Sobrescrevendo o register do auth, utilizando para cadastro de colaborador.
     Route::post('/register', 'Auth\RegisterController@store'); //Sobrescrevendo o register do auth, utilizando para cadastro de colaborador.
     Route::get('/users/{user}/edit','Auth\UserController@edit')->name('pagedituser');
