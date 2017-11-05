@@ -32,15 +32,24 @@ class UserTest extends TestCase
 
         $request = ['name'=> 'TestCase',
                     'email' => 'testeautomatico@testando.com.br',
+                    'admin' => '1',
                     'coordination' => $coordination->id
                     ];
         $response = $this->actingAs($userAdmin)
                          ->post('/register',$request);
+        
+       
+
         $response->assertStatus(302);//Verifica se foi redirecionado para página de alterar
         try {
             $user = User::where('email','testeautomatico@testando.com.br')
                         ->firstOrFail();//Verifica se cadastrou
             
+            $this->assertTrue($user->name==="TestCase");
+            $this->assertTrue($user->coordination->id===$coordination->id);
+            $this->assertTrue($user->email==="testeautomatico@testando.com.br");
+            $this->assertTrue($user->admin);
+
             $response->assertRedirect('/users/'.$user->id.'/edit');
 
             $coordination = $coordinations->shift();
@@ -57,6 +66,7 @@ class UserTest extends TestCase
             $response->assertStatus(302);//Verifica se foi redirecionado
             $this->assertTrue($user->name==="TestCase2");
             $this->assertTrue($user->coordination->id===$coordination->id);
+            $this->assertFalse($user->admin);
 
             $response = $this->actingAs($userAdmin)
                          ->delete('/users/'.$user->id);

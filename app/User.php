@@ -44,4 +44,8 @@ class User extends Authenticatable
     public function setAdminAttribute($value) {
         $this->attributes['admin'] = $value?true:false;
     }
+
+    public function getAdminAttribute($value) {
+        return $value?true:false;
+    }
 }
