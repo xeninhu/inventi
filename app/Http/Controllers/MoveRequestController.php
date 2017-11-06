@@ -4,11 +4,31 @@ namespace App\Http\Controllers;
 
 use App\MoveRequest;
 use App\Item;
+use App\User;
+use App\Coordination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MoveRequestController extends Controller
 {
+
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        
+        return Validator::make($data, [
+            'itens' => 'required',
+            'user'  => 'required_without_all:my_coord,other_coord'
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,9 +46,17 @@ class MoveRequestController extends Controller
      */
     public function create()
     {
-        $itens = Item::where('user_id',Auth::user()->id)
-                    ->get();
-        return view('requests.create',['itens'=>$itens]);
+        $itens = Item::select('id','item','patrimony_number')
+            ->where('user_id',Auth::user()->id)
+            ->get();
+        $users = User::select('id','name')
+            ->where('coordination_id',Auth::user()->coordination->id)
+            ->where('id','<>',Auth::user()->id)
+            ->get();
+        $coordinations = Coordination::select('id','name')
+            ->where('id','<>',Auth::user()->coordination->id)
+            ->get();
+        return view('requests.create',['itens'=>$itens,'users'=>$users,'coordinations'=>$coordinations]);
     }
 
     /**
@@ -39,7 +67,8 @@ class MoveRequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validator($request->all())->validate();
+        return $request->all();
     }
 
     /**
