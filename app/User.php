@@ -35,7 +35,8 @@ class User extends Authenticatable
     * Se for coordenador, retorna a coordenação, senão retorna false
     */
     public function getCoordinatorAttribute() {
-        if($this->coordination->coordinator->id===$this->id)
+        if($this->coordination->coordinator //Verifica se a coordenação do usuário tem coordenador, para não dar nullpointer
+            && $this->coordination->coordinator->id===$this->id) 
             return $this->coordination;
         else
             return false;
