@@ -21,11 +21,15 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('users')->insert([
             'id'    => 1,
-            'name' => 'Diógenes Ribeiro Duarte',
-            'email' => 'diogenes.duarte@prodeb.ba.gov.br',
-            'password' =>  '$2y$10$2P.o3KTKpfUZ27UON852ferf2B.p09VXbV4l0IqhfdA98w2TxugrC',
-            'remember_token' => 'BFlnVcX9G8MeLTxgK3Hgnzam3dFcBkseMQKblhz6tOaLN4q8qfINi9vR7aSR',
-            'coordination_id' => 2
+            'name' => 'Administrador',
+            'email' => 'admin@admin.com',
+            'password' =>  '$2y$10$UWUH4A3MAnquAczafBcb..X9JYm6pzsuFpwdDsclV4NMO.uspgK9u',
+            'coordination_id' => 2,
+            'admin' => true
         ]);
+        DB::table('coordinations')->where('id',2)
+            ->update([
+                'coordinator_id' => 1
+            ]);
     }
 }
