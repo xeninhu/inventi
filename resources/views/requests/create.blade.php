@@ -22,7 +22,15 @@
                 <strong>{{ $errors->first('itens') }}</strong>
             </div>
         @endif
-
+        <div class="field">
+            <label for="description">Escreva o motivo da solicitação</label>
+            <input type="text" name="description" value="{{old('description')}}"/>
+        </div>
+        @if ($errors->has('description'))
+            <div class="ui error message">
+                <strong>{{ $errors->first('description') }}</strong>
+            </div>
+        @endif
         <div class="ui top attached tabular menu">
             <a class="active item" data-tab="user-tab">Mover para usuário</a>
             <a class="item" data-tab="coord-tab">Mover para coordenação</a>
@@ -31,7 +39,7 @@
             <div class="field">
                 <label for="name">Escolha um usuário de sua coordenação</label>
                 <div class="ui fluid search selection dropdown">
-                    <input type="hidden" name="user" id="user" value="{{old('user')}}">
+                    <input type="hidden" name="user_to" id="user_to" value="{{old('user_to')}}">
                     <i class="dropdown icon"></i>
                     <div class="default text">Busque um usuário</div>
                     <div class="menu">

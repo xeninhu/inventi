@@ -41,6 +41,13 @@ class CreateMoveRequest extends Migration
             $table->string('description')
                 ->nullable();
 
+            $table->integer('item_id')
+                ->unsigned();
+            $table->foreign('item_id')->references('id')
+                ->on('itens')
+                ->onDelete('restrict')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }
@@ -55,7 +62,8 @@ class CreateMoveRequest extends Migration
         Schema::table('move_requests', function (Blueprint $table) {
             $table->dropForeign('move_requests_user_from_id_foreign');
             $table->dropForeign('move_requests_user_to_id_foreign');
-            $table->dropForeign('move_requests_coordination_id_id_foreign');
+            $table->dropForeign('move_requests_coordination_id_foreign');
+            $table->dropForeign('move_requests_item_id_foreign');
         });
         Schema::dropIfExists('move_requests');
     }

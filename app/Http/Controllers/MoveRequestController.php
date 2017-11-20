@@ -9,6 +9,7 @@ use App\Coordination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class MoveRequestController extends Controller
 {
@@ -25,7 +26,7 @@ class MoveRequestController extends Controller
         
         return Validator::make($data, [
             'itens' => 'required',
-            'user'  => 'required_without_all:my_coord,other_coord'
+            'user_to'  => 'required_without_all:my_coord,other_coord'
         ]);
     }
 
@@ -67,8 +68,26 @@ class MoveRequestController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validator($request->all())->validate();
-        return $request->all();
+        $data = $request->all();
+        $this->validator($data)->validate();
+        DB::beginTransaction();
+        foreach($data["itens"] as $item) {
+            $move_request = new MoveRequest();
+            $move_request->user_from_id = (Auth::user())->id;
+            if(array_key_exists("user_to",$data))
+                $move_request->user_to_id = $data["user_to"];
+            if(array_key_exists("my_coord",$data)){
+                $move_request->coordination_id = (Auth::user())->coordination->id;
+            }
+            else if(array_key_exists("other_coord",$data)) {
+                $move_request->coordination_id = $data["other_coord"];
+            }
+            $move_request->description = $data["description"];
+            $move_request->item_id = $item;
+            $move_request->save();
+        }
+        DB::commit();
+        
     }
 
     /**
