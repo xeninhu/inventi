@@ -48,6 +48,11 @@ class CreateMoveRequest extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
 
+            $table->boolean('resolved')
+                ->comment('Indica se a solicitação de mudanças já foi resolvida')
+                ->default(false);
+
+
             $table->timestamps();
         });
     }

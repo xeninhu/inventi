@@ -3,6 +3,25 @@
 @section('content')
 
 <div class="ui basic segment">
+     @if(Session::has('success'))
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Sucesso!
+            </div>
+            <p>Movimentações solicitadas com sucesso</p>
+        </div>
+    @endif
+
+    @if($errors->has('item_exists'))
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Erro!
+            </div>
+            <p>{{$errors->first('item_exists')}}</p>
+        </div>
+    @endif
 
     <div class="ui header">Solicitar movimentação</div>
 
@@ -11,11 +30,17 @@
         
         <div class="field">
             <label for="name">Escolha um ou mais de seus itens</label>
-            <select name="itens[]" multiple="" class="ui fluid dropdown">
-                @foreach($itens as $item)
-                    <option value="{{$item->id}}" @if(old('itens') && in_array($item->id,old('itens'))) selected @endif>{{$item->patrimony_number}} - {{$item->item}}</option>
-                @endforeach
-            </select>
+            @if(!count($itens))
+                 <select name="itens[]"  class="ui fluid dropdown" disabled>
+                    <option value="">Usuário não possui itens</option> 
+                 </select>
+            @else
+                <select name="itens[]" multiple="" class="ui fluid dropdown">
+                    @foreach($itens as $item)
+                        <option value="{{$item->id}}" @if(old('itens') && in_array($item->id,old('itens'))) selected @endif>{{$item->patrimony_number}} - {{$item->item}}</option>
+                    @endforeach
+                </select>
+            @endif
         </div>
         @if ($errors->has('itens'))
             <div class="ui error message">
