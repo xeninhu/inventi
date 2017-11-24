@@ -20,5 +20,33 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'admin' => 0,
+        'coordination_id' => function() {
+            return factory(App\Coordination::class)->create()->id;
+        }
+    ];
+});
+
+$factory->define(App\Coordination::class,function (Faker\Generator $faker) {
+    return [ 
+        'name' => $faker->word(),
+    ];
+});
+
+$factory->define(App\Item::class,function (Faker\Generator $faker) {
+    return [
+        'patrimony_number' => $faker->randomNumber(),
+        'item' => $faker->word(),
+        'coordination_id' => 1,
+        'type_id' => function() {
+            return factory(App\ItemType::class)->create()->id;
+        },
+    ];
+});
+
+
+$factory->define(App\ItemType::class,function (Faker\Generator $faker) {
+    return [ 
+        'type' => $faker->word(),
     ];
 });
