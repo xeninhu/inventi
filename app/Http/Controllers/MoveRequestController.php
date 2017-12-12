@@ -67,6 +67,15 @@ class MoveRequestController extends Controller
         return view('requests.create',['itens'=>$itens,'users'=>$users,'coordinations'=>$coordinations]);
     }
 
+    private function throwError($errors) {
+        DB::rollback();
+        return redirect('move-requests/create')
+            ->withErrors(
+                $errors
+            )
+            ->withInput();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -78,27 +87,46 @@ class MoveRequestController extends Controller
         $data = $request->all();
         $this->validator($data)->validate();
         DB::beginTransaction();
+
+        //Verifico se os itens são do usuário logado
+        $itens_from_user = Item::whereIn("id",$data["itens"])
+            ->where( function($query) {
+                $query->whereNull("user_id")
+                    ->orWhere("user_id","<>",(Auth::user())->id);
+            })
+            ->first();
+        
+        if($itens_from_user) 
+            return $this->throwError(
+                ['forbidden_itens'=>'Pelo menos um dos itens não pertence ao usuário logado']
+            );
+
+
         foreach($data["itens"] as $item) {
             
             //Verifico se já existe solicitação para o item.
             $move_exists = MoveRequest::where("item_id",$item)
                 ->where("move_requests.resolved","=","0")
                 ->first();
-            if($move_exists) {
-                DB::rollback();
-                return redirect('move-requests/create')
-                    ->withErrors(
-                        ['item_exists'=>'Já existe uma solicitação para o item '.$move_exists->item->item]
-                    )
-                    ->withInput();
-            }
+            if($move_exists)
+                return $this->throwError(
+                    ['item_exists'=>'Já existe uma solicitação para o item '.$move_exists->item->item]
+                );
 
             //Insiro a solicitação
             $move_request = new MoveRequest();
             $move_request->user_from_id = (Auth::user())->id;
             //O validator garante que ou vem user, ou um dos pares my_coord|other_coord
-            if(array_key_exists("user_to",$data))
+            if(array_key_exists("user_to",$data)) {
+                //Verifico se o usuário é da mesma coordenação do logado
+                $user_to = User::find($data["user_to"]);
+                if($user_to->coordination_id!=(Auth::user())->coordination->id)
+                    return $this->throwError(
+                        ['user_from_other_coord'=>'Usuário não pertence a sua coordenação']
+                    );
+                
                 $move_request->user_to_id = $data["user_to"]; 
+            }
             if(array_key_exists("my_coord",$data)){
                 $move_request->coordination_id = (Auth::user())->coordination->id;
             }

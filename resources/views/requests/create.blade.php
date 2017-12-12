@@ -23,6 +23,16 @@
         </div>
     @endif
 
+    @if($errors->has('forbidden_itens'))
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                Erro!
+            </div>
+            <p>{{$errors->first('forbidden_itens')}}</p>
+        </div>
+    @endif
+
     <div class="ui header">Solicitar movimentação</div>
 
     <form class="ui form error" method="POST" action="{{ route('move-requests.store') }}">
