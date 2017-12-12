@@ -11,11 +11,6 @@
 |
 */
 
-
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
-
 Route::get('/', 'HomeController@index')
     ->name('home')
     ->middleware('auth');
@@ -43,4 +38,6 @@ Route::group(['middleware' => ['auth','admin']], function() {
     
 });
 
-
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('move-requests', 'MoveRequestController');
+});
