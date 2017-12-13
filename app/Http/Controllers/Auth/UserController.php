@@ -75,7 +75,7 @@ class UserController extends Controller
         if(!$user_admin->admin && !$user_admin->coordinator)
             return response([
                 "message" => "Você precisa ser adminstrador ou coordenador para acessar essa busca"
-                ],401);
+                ],403);
         if($user_admin->admin)        
             $users = User::where('name','like',"%$name%")->get();
         else
@@ -85,6 +85,19 @@ class UserController extends Controller
         
         $search_object = new SearchObject($users,'name','id');
         return response()->json($search_object);
+    }
+
+    public function pageSendItensMessages() {
+        if((Auth::user())->admin)  //Administrador pega todas
+            $coordinations = Coordination::all();
+        elseif(!($coordination = (Auth::user())->coordinator)) //Não coordenador nem admin, proibido.
+            return response([
+                    "message" => "Você precisa ser adminstrador ou coordenador para acessar essa página"
+                ],403);
+        else 
+            $coordinations = [$coordination];//Coordenador pega apenas pagina de sua coordenação
+
+        return view('users.messages',['coordinations'=>$coordinations]);
     }
 
 }

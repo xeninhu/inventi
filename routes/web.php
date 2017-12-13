@@ -40,4 +40,7 @@ Route::group(['middleware' => ['auth','admin']], function() {
 
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('move-requests', 'MoveRequestController');
+    Route::get('users/send-itens-message','Auth\UserController@pageSendItensMessages');
+    Route::post('users/send-itens-message','Auth\UserController@sendItensMessages')
+        ->name('send-itens-message');
 });

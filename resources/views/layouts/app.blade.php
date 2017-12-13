@@ -105,7 +105,7 @@
         
         
     </div>
-
+    @yield('components')
     <!--Form para função link_form_delete-->
     <form id="form-remove" action="" method="post">
         <input type="hidden" name="_method" value="delete" />
