@@ -9,6 +9,8 @@ use App\User;
 use App\Coordination;
 use App\Util\SearchObject;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendUsersItens;
+
 
 class UserController extends Controller
 {
@@ -98,6 +100,29 @@ class UserController extends Controller
             $coordinations = [$coordination];//Coordenador pega apenas pagina de sua coordenação
 
         return view('users.messages',['coordinations'=>$coordinations]);
+    }
+
+    public function sendItensMessages(Request $request) {
+        $data = $request->all();
+        $userLogged = Auth::user();
+        $coordinations = $data["coordinations"];
+        if(!$userLogged->admin && 
+            (count($coordinations)>1 || 
+                $coordination[0]!==$userLogged->coordination->id
+            )){
+
+                return response([
+                    "message" => "Apenas admin pode realizar essa ação para coordenações diferentes da sua"
+                ],403);
+        }
+
+        foreach($coordinations as $coordination) {
+            dispatch(new SendUsersItens($coordination));
+        }
+        $request->session()->flash('success',true);
+        return redirect('/users/send-itens-message');
+        
+
     }
 
 }

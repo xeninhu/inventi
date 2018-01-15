@@ -22,6 +22,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Coordination');
     }
+
+    public function itens() {
+        return $this->hasMany('App\Item');
+    }
     /**
      * The attributes that should be hidden for arrays.
      *

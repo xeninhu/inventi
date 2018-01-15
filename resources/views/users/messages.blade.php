@@ -2,6 +2,15 @@
 
 @section('content')
 <div class="ui basic segment">
+    @if(Session::has('success'))
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Sucesso!
+            </div>
+            <p>Os e-mails foram colocados para processamento e estão sendo enviados.</p>
+        </div>
+    @endif
 
     <div class="ui header">Enviar Mensagem com itens a colaboradores</div>
 
