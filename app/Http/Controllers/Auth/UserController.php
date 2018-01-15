@@ -108,11 +108,12 @@ class UserController extends Controller
         $coordinations = $data["coordinations"];
         if(!$userLogged->admin && 
             (count($coordinations)>1 || 
-                $coordination[0]!==$userLogged->coordination->id
+                $coordinations[0]!==$userLogged->coordination->id ||
+                !$userLogged->coordinator
             )){
 
                 return response([
-                    "message" => "Apenas admin pode realizar essa ação para coordenações diferentes da sua"
+                    "message" => "Apenas admin ou coordenadores podem realizar essa ação. Apenas admin para coordenações diferentes da sua"
                 ],403);
         }
 
