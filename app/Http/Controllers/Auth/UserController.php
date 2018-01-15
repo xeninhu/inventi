@@ -9,6 +9,8 @@ use App\User;
 use App\Coordination;
 use App\Util\SearchObject;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendUsersItens;
+
 
 class UserController extends Controller
 {
@@ -75,7 +77,7 @@ class UserController extends Controller
         if(!$user_admin->admin && !$user_admin->coordinator)
             return response([
                 "message" => "Você precisa ser adminstrador ou coordenador para acessar essa busca"
-                ],401);
+                ],403);
         if($user_admin->admin)        
             $users = User::where('name','like',"%$name%")->get();
         else
@@ -85,6 +87,43 @@ class UserController extends Controller
         
         $search_object = new SearchObject($users,'name','id');
         return response()->json($search_object);
+    }
+
+    public function pageSendItensMessages() {
+        if((Auth::user())->admin)  //Administrador pega todas
+            $coordinations = Coordination::all();
+        elseif(!($coordination = (Auth::user())->coordinator)) //Não coordenador nem admin, proibido.
+            return response([
+                    "message" => "Você precisa ser adminstrador ou coordenador para acessar essa página"
+                ],403);
+        else 
+            $coordinations = [$coordination];//Coordenador pega apenas pagina de sua coordenação
+
+        return view('users.messages',['coordinations'=>$coordinations]);
+    }
+
+    public function sendItensMessages(Request $request) {
+        $data = $request->all();
+        $userLogged = Auth::user();
+        $coordinations = $data["coordinations"];
+        if(!$userLogged->admin && 
+            (count($coordinations)>1 || 
+                $coordinations[0]!==$userLogged->coordination->id ||
+                !$userLogged->coordinator
+            )){
+
+                return response([
+                    "message" => "Apenas admin ou coordenadores podem realizar essa ação. Apenas admin para coordenações diferentes da sua"
+                ],403);
+        }
+
+        foreach($coordinations as $coordination) {
+            dispatch(new SendUsersItens($coordination));
+        }
+        $request->session()->flash('success',true);
+        return redirect('/users/send-itens-message');
+        
+
     }
 
 }
