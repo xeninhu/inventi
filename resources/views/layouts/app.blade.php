@@ -79,19 +79,38 @@
          @if (!Auth::guest())
         <div class="ui bottom attached segment pushable">
             <div class=".sidebar-container">
-            <div class="ui visible inverted left vertical sidebar menu">
-                @if (Auth::user()->admin)
-                    <a class="item" href="{{route('indexuser')}}">
-                        <i class="users icon"></i> Colaborador
-                    </a>
-                    <a class="item" href="{{route('itens.index')}}">
-                        <i class="laptop icon"></i>Item de inventário
-                    </a>
-                @endif
-                <a class="item" href="{{route('move-requests.create')}}">
-                    <i class="shipping icon"></i>Solicitar movimentação de item
-                </a>
-            </div>
+                <div class="ui visible inverted left vertical sidebar menu">
+                    @if (Auth::user()->admin)
+                        <div class="item">
+                            <div class="header">Administração</div>
+                            <div class="menu">
+                                <a class="item" href="{{route('indexuser')}}">
+                                    <i class="users icon"></i> Colaborador
+                                </a>
+                                <a class="item" href="{{route('itens.index')}}">
+                                    <i class="laptop icon"></i>Item de inventário
+                                </a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="header">Relatórios</div>
+                            <div class="menu">
+                                <a class="item" href="{{route('itens-report.pagegroupeduser')}}">
+                                    <i class="chart area icon"></i>Itens agrupados por usuários
+                                </a>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="item">
+                        <div class="header">Movimentações</div>
+                        <div class="menu">
+                            <a class="item" href="{{route('move-requests.create')}}">
+                                <i class="shipping icon"></i>Solicitar movimentação de item
+                            </a>
+                        </div>
+                    </div>
+                   
+                </div>
             </div>
             <div class="pusher">
                 <div class="ui container">

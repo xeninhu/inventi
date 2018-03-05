@@ -31,8 +31,13 @@ Route::group(['middleware' => ['auth','admin']], function() {
     Route::get('itens/move','ItensController@moveItensToUserPage')->name('itens.movepage');
     Route::put('itens/move','ItensController@moveItensToUser')->name('itens.move');
     Route::get('itens/search/{patrimony_number}','ItensController@search');
+    
+    Route::get('itens-report/page-group-user','ItensController@pageItensGroupedByUser')->name('itens-report.pagegroupeduser');
+    
 
+    
     Route::resource('itens', 'ItensController');
+    
 
     Route::get('/item_types/{type}','ItemTypesController@search');
     

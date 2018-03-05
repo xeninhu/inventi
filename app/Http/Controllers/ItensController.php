@@ -258,4 +258,10 @@ class ItensController extends Controller
         $search_object = new SearchObject($itens,'patrimony_number','id');
         return response()->json($search_object);
     }
+
+    public function pageItensGroupedByUser() {
+        $coordinations = Coordination::all();
+        return view('itens-reports/pagegroupedbyuser',['coordinations'=>$coordinations]);
+    }
+    
 }
