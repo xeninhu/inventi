@@ -259,9 +259,20 @@ class ItensController extends Controller
         return response()->json($search_object);
     }
 
-    public function pageItensGroupedByUser() {
+    public function pageItensGroupedByUser(Request $request) {
         $coordinations = Coordination::all();
-        return view('itens-reports/pagegroupedbyuser',['coordinations'=>$coordinations]);
+        $users = null;
+        if(isset($request->coordination)) {
+            $users = User::where('coordination_id',$request->coordination)
+                ->with('itens')->get();
+            $itens_alone = Item::doesntHave("user")->get();
+        }
+        $array_to_view = [
+            "coordinations" => $coordinations,
+            "coordination" => $request->coordination,
+            "users" => $users
+        ];
+        return view('itens-reports/pagegroupedbyuser',$array_to_view);
     }
     
 }
