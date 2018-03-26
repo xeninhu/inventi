@@ -90,6 +90,9 @@
                                 <a class="item" href="{{route('itens.index')}}">
                                     <i class="laptop icon"></i>Item de inventário
                                 </a>
+                                <a class="item" href="/users/send-itens-message">
+                                    <i class="mail icon"></i>Enviar e-mails de itens a usuários
+                                </a>
                             </div>
                         </div>
                         <div class="item">

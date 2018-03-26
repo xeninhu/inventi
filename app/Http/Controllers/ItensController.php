@@ -261,7 +261,7 @@ class ItensController extends Controller
 
     public function pageItensGroupedByUser(Request $request) {
         $coordinations = Coordination::all();
-        $users = null;
+        $users = array();
         if(isset($request->coordination)) {
             $users = User::where('coordination_id',$request->coordination)
                 ->with('itens')->get();
@@ -270,7 +270,8 @@ class ItensController extends Controller
         $array_to_view = [
             "coordinations" => $coordinations,
             "coordination" => $request->coordination,
-            "users" => $users
+            "users" => $users,
+            "itens_alone" => $itens_alone
         ];
         return view('itens-reports/pagegroupedbyuser',$array_to_view);
     }

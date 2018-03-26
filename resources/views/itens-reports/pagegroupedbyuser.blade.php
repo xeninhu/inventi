@@ -66,6 +66,16 @@
 @endforeach
 
 <h2 class="ui dividing header">Itens sem dono</h2>
+<div class="ui middle aligned divided list">
+    @foreach ($itens_alone as $item)
+    <div class="item">
+    <i class="laptop icon"></i>
+        <div class="content">
+            <a class="header">{{$item->patrimony_number}} - {{$item->item}}</a>
+        </div>
+    </div>
+    @endforeach
+</div>
 
 @endsection
 
