@@ -48,4 +48,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('users/send-itens-message','Auth\UserController@pageSendItensMessages');
     Route::post('users/send-itens-message','Auth\UserController@sendItensMessages')
         ->name('send-itens-message');
+    Route::match(['get', 'post'], 'itens-report/check-itens-from-file','ItensController@checkItensFromFile')
+        ->name('itens-report.checkfromfile');
 });

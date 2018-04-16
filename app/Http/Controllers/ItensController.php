@@ -23,8 +23,7 @@ class ItensController extends Controller
     * @param  array  $data
     * @return \Illuminate\Contracts\Validation\Validator
     */
-    protected function validator(array $data,$id=false)
-    {
+    protected function validator(array $data,$id=false) {
         $rules = [
             'item_type' => 'required|string|max:255',
             'item' => 'required|string|max:255',
@@ -66,8 +65,7 @@ class ItensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $itens = Item::paginate(10);
 
         return view('itens.index',['itens'=>$itens]);
@@ -78,8 +76,7 @@ class ItensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         $coordinations = Coordination::all();
         return view('itens/create',['coordinations'=>$coordinations]);
     }
@@ -90,8 +87,7 @@ class ItensController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->validator($request->all())->validate();
 
         $item = new Item();
@@ -110,8 +106,7 @@ class ItensController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -121,8 +116,7 @@ class ItensController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         $item = Item::find($id);
         $coordinations = Coordination::all();
 
@@ -138,8 +132,7 @@ class ItensController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $this->validator($request->all(),$id)->validate();
 
         $item = Item::findOrFail($id);
@@ -159,8 +152,7 @@ class ItensController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,Request $request)
-    {
+    public function destroy($id,Request $request){
         Item::destroy($id);
         $request->session()->flash('from-remove',true);
         return redirect('/itens');
@@ -262,6 +254,7 @@ class ItensController extends Controller
     public function pageItensGroupedByUser(Request $request) {
         $coordinations = Coordination::all();
         $users = array();
+        $itens_alone = array();
         if(isset($request->coordination)) {
             $users = User::where('coordination_id',$request->coordination)
                 ->with('itens')->get();
@@ -276,4 +269,32 @@ class ItensController extends Controller
         return view('itens-reports/pagegroupedbyuser',$array_to_view);
     }
     
+    public function checkItensFromFile(Request $request) {
+        $coord_with_itens = array();
+        if($request->hasFile('itens')) {
+            $itens = \File::get($request->itens->path());
+            $itens = explode("\n",$itens);
+            
+            /**
+             * Considero que só existem itens com no máximo 5 digitos. O MXM faz 
+             * uma loucura e coloca esses dígitos ou no fim, ou no meio da cadeia
+             * de caracteres, então tiro os numeros da frente e caso sobrem 5 dígitos
+             * eu mantenho, caso sobrem 7, eu divido por 100 e pego os 5 do meio.
+             */
+            foreach($itens as &$item) {
+                $item = (int)$item;
+                /*if(strlen((string)$item)==7)
+                    $item = $item/100;*/
+            }
+            $coord_with_itens = Coordination::with(['itens'=>function($query) use ($itens) {
+                $query->whereIn('patrimony_number',$itens);
+            }])->get();
+        }
+            
+        return view('itens-reports/checkfromfile', 
+            [
+                "coord_with_itens"=>$coord_with_itens,
+                "itens"=>$itens
+            ]);
+    }
 }

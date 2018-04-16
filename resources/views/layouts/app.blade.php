@@ -35,6 +35,8 @@
         .sidebar { -ms-overflow-style: none; }
         .sidebar { overflow: -moz-scrollbars-none; }
         .menu   {margin: 0 !important;}
+        
+        @yield('styles')
     </style>
 
     
@@ -95,15 +97,23 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="header">Relatórios</div>
+                    @endif
+                    <div class="item">
+                        <div class="header">Relatórios</div>
+                        <div class="menu">
+                            <a class="item" href="{{route('itens-report.pagegroupeduser')}}">
+                                <i class="chart area icon"></i>Itens agrupados por usuários
+                            </a>
+                        </div>
+                        @if (Auth::user()->admin)
                             <div class="menu">
-                                <a class="item" href="{{route('itens-report.pagegroupeduser')}}">
-                                    <i class="chart area icon"></i>Itens agrupados por usuários
+                                <a class="item" href="{{route('itens-report.checkfromfile')}}">
+                                    <i class="chart bar icon"></i>Comparar a partir de arquivo
                                 </a>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
+                    
                     <div class="item">
                         <div class="header">Movimentações</div>
                         <div class="menu">
