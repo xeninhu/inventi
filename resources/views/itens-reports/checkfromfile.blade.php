@@ -28,6 +28,10 @@
             Coordenação: {{$coord->name}}
             @foreach($coord->itens as $item)
                 {{$item->item}}
+                <!--
+                Uso PHP pois como já tenho que percorrer na view, removo os itens aqui. 
+                Se fizesse no controller antes de enviar ia percorrer o laço duas vezes.
+                -->
                 @php
                     $to_remove[] = $item->patrimony_number;
                 @endphp
