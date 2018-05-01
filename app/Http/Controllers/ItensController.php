@@ -271,6 +271,7 @@ class ItensController extends Controller
     
     public function checkItensFromFile(Request $request) {
         $coord_with_itens = array();
+        $itens = array();
         if($request->hasFile('itens')) {
             $itens = \File::get($request->itens->path());
             $itens = explode("\n",$itens);
@@ -283,12 +284,21 @@ class ItensController extends Controller
              */
             foreach($itens as &$item) {
                 $item = (int)$item;
-                /*if(strlen((string)$item)==7)
-                    $item = $item/100;*/
+                if(strlen((string)$item)==7)
+                    $item = $item/100;
             }
-            $coord_with_itens = Coordination::with(['itens'=>function($query) use ($itens) {
-                $query->whereIn('patrimony_number',$itens);
-            }])->get();
+            $coord_with_itens = Coordination::withCount(['itens'=>function($query) use ($itens) {
+                    $query->whereIn('patrimony_number',$itens);
+                }])
+                ->with(['itens'=>function($query) use ($itens) {
+                    $query->whereIn('patrimony_number',$itens);
+                }])
+                /**
+                 * Passei para o template pois a query, apesar de a query rodar 
+                 * direto no banco mysql, o laravel acusa erro tanto com having, quanto com where
+                 */
+                //->having("itens_count",">","0") 
+                ->get();
         }
             
         return view('itens-reports/checkfromfile', 
