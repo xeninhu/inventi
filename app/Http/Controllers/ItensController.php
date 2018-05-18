@@ -258,7 +258,9 @@ class ItensController extends Controller
         if(isset($request->coordination)) {
             $users = User::where('coordination_id',$request->coordination)
                 ->with('itens')->get();
-            $itens_alone = Item::doesntHave("user")->get();
+            $itens_alone = Item::doesntHave("user")
+                ->where("coordination_id",$request->coordination)
+                ->get();
         }
         $array_to_view = [
             "coordinations" => $coordinations,
@@ -291,8 +293,10 @@ class ItensController extends Controller
                     $query->whereIn('patrimony_number',$itens);
                 }])
                 ->with(['itens'=>function($query) use ($itens) {
-                    $query->whereIn('patrimony_number',$itens);
+                    $query->select("id","patrimony_number","item")
+                          ->whereIn('patrimony_number',$itens);
                 }])
+                ->with('itens.user')
                 /**
                  * Passei para o template pois a query, apesar de a query rodar 
                  * direto no banco mysql, o laravel acusa erro tanto com having, quanto com where

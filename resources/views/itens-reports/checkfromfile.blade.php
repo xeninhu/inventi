@@ -30,11 +30,15 @@
                             <div class="ui celled list">
                             @foreach($coord->itens as $item)
                                 <div class="item">
-                                    <i class="ui computer icon"></i>
+                                    @if($item->user && $item->user->coordination_id!=$coord->id)
+                                        <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item com usuário de outra coordenação</div>
+                                    @endif
+
+                                    <div class="header"><i class="ui computer icon"></i>{{ $item->patrimony_number}}</div>
+                                    
                                     <div class="content">
-                                        <div class="header">{{$item->patrimony_number}}</div>
-                                        {{$item->item}}
-                                        </div>
+                                        {{ str_limit($item->item,25) }}
+                                    </div>
                                 </div>
                                 <!--
                                 Uso PHP pois como já tenho que percorrer na view, removo os itens aqui. 
