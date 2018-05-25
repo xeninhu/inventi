@@ -39,6 +39,8 @@ class SendUsersItens implements ShouldQueue
             ->where("coordination_id",$this->coordination_id)
             ->get();
         foreach($users as $user)
-            Mail::to($user->email)->send(new UserItensList($user->itens));
+            Mail::to($user->email)
+                ->from("Sistema Inventi (nao-responda@inventi.com.br)")
+                ->send(new UserItensList($user->itens));
     }
 }

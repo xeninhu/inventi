@@ -82,7 +82,7 @@
         <div class="ui bottom attached segment pushable">
             <div class=".sidebar-container">
                 <div class="ui visible inverted left vertical sidebar menu">
-                    @if (Auth::user()->admin)
+                    @if (Auth::user()->admin || Auth::user()->coordinator)
                         <div class="item">
                             <div class="header">Administração</div>
                             <div class="menu">
