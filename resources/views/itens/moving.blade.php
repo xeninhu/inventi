@@ -79,16 +79,18 @@
 @section('scripts')
 $('#dropdown_itens').dropdown({
    fields: {name: 'name', value: 'value'},
-   minCharacters:4,
+   minCharacters:3,
    apiSettings: {
-      url: '/itens/search/{query}'
+        cache: false,
+        url: '/itens/search/{query}'
    }
 });
 $('#dropdown_users').dropdown({
    fields: {name: 'name', value: 'value'},
    minCharacters:4,
    apiSettings: {
-      url: '/users/search/{query}'
+        cache: false,
+        url: '/users/search/{query}'
    }
 });
 @endsection
