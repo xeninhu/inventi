@@ -65,8 +65,17 @@ class ItensController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(){
-        $itens = Item::paginate(10);
+    public function index(Request $request){
+
+        if(!is_null($request->patrimony_number)) {
+            $itens = Item::where("patrimony_number", "like", "%$request->patrimony_number%")
+                ->paginate(10);
+
+            $itens->appends("patrimony_number", $request->patrimony_number);
+        }
+        else {
+            $itens = Item::paginate(10);
+        }
 
         return view('itens.index',['itens'=>$itens]);
     }
