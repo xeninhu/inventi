@@ -23,35 +23,33 @@
 
         <div class="ui cards">
             @foreach($coord_with_itens as $coord)
-                @if($coord->itens_count>0)
-                    <div class="card">
-                        <div class="content">
-                            <div class="header">Coordenação: {{$coord->name}}</div>
-                            <div class="ui celled list">
-                            @foreach($coord->itens as $item)
-                                <div class="item">
-                                    @if($item->user && $item->user->coordination_id!=$coord->id)
-                                        <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item com usuário de outra coordenação</div>
-                                    @endif
+                <div class="card">
+                    <div class="content">
+                        <div class="header">Coordenação: {{$coord->name}}</div>
+                        <div class="ui celled list">
+                        @foreach($coord->itens as $item)
+                            <div class="item">
+                                @if($item->user && $item->user->coordination_id!=$coord->id)
+                                    <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item com usuário de outra coordenação</div>
+                                @endif
 
-                                    <div class="header"><i class="ui computer icon"></i>{{ $item->patrimony_number}}</div>
-                                    
-                                    <div class="content">
-                                        {{ str_limit($item->item,25) }}
-                                    </div>
+                                <div class="header"><i class="ui computer icon"></i>{{ $item->patrimony_number}}</div>
+                                
+                                <div class="content">
+                                    {{ str_limit($item->item,25) }}
                                 </div>
-                                <!--
-                                Uso PHP pois como já tenho que percorrer na view, removo os itens aqui. 
-                                Se fizesse no controller antes de enviar ia percorrer o laço duas vezes.
-                                -->
-                                @php
-                                    $to_remove[] = $item->patrimony_number;
-                                @endphp
-                            @endforeach
                             </div>
+                            <!--
+                            Uso PHP pois como já tenho que percorrer na view, removo os itens aqui. 
+                            Se fizesse no controller antes de enviar ia percorrer o laço duas vezes.
+                            -->
+                            @php
+                                $to_remove[] = $item->patrimony_number;
+                            @endphp
+                        @endforeach
                         </div>
                     </div>
-                @endif
+                </div>
             @endforeach
             @php
                 if(!empty($to_remove))

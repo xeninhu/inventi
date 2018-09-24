@@ -293,15 +293,10 @@ class ItensController extends Controller
                     $query->whereIn('patrimony_number',$itens);
                 }])
                 ->with(['itens'=>function($query) use ($itens) {
-                    $query->select("id","patrimony_number","item")
-                          ->whereIn('patrimony_number',$itens);
-                }])
-                ->with('itens.user')
-                /**
-                 * Passei para o template pois a query, apesar de a query rodar 
-                 * direto no banco mysql, o laravel acusa erro tanto com having, quanto com where
-                 */
-                //->having("itens_count",">","0") 
+                    $query->select("id","patrimony_number","item","coordination_id","user_id")
+                            ->whereIn('patrimony_number',$itens);   
+                },'itens.user'])
+                ->having("itens_count",">","0") 
                 ->get();
         }
             
