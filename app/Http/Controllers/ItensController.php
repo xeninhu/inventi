@@ -38,7 +38,7 @@ class ItensController extends Controller
     }
 
     //update e store possuem esse mesmo trecho de código. Aqui eu altero o item com os dados vindos do template
-    private function fillItem(&$item,$request) {
+    private function fillItem(Item &$item,$request) {
 
         $data = $request->all();
 

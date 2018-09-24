@@ -33,7 +33,7 @@
     </div>
     <form class="ui form" method="get" action="{{route('itens.index')}}">
         <div class="ui action input">
-            <input type="text" placeholder="Numero de patrimônio" name="patrimony_number">
+            <input type="number" placeholder="Numero de patrimônio" name="patrimony_number">
             <button class="ui icon button">
                 <i class="search icon"></i>
             </button>
