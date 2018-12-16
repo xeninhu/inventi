@@ -54,7 +54,11 @@
                         <div class="item">
                             <i class="laptop icon"></i>
                             <div class="content">
-                                {{$item->patrimony_number}} - {{$item->item}}
+                              {{$item->patrimony_number}} -   
+                              @if ($item->coordination->id!=$coordination)
+                                <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item de outra coordenação: {{$item->coordination->name}}</div>
+                              @endif
+                              {{$item->item}}
                             </div>
                         </div>
                         @endforeach
