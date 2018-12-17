@@ -30,7 +30,7 @@
                         @foreach($coord->itens as $item)
                             <div class="item">
                                 @if($item->user && $item->user->coordination_id!=$coord->id)
-                                    <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item com usuário de outra coordenação</div>
+                                    <div class="ui red label"><i class="ui exclamation triangle icon"></i>Item com usuário de outra coordenação: {{$item->user->name}}</div>
                                 @endif
 
                                 <div class="header"><i class="ui computer icon"></i>{{ $item->patrimony_number}}</div>
