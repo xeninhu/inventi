@@ -288,14 +288,15 @@ class ItensController extends Controller
             $itens = explode("\n",$itens);
             
             /**
-             * Considero que só existem itens com no máximo 5 digitos. O MXM faz 
+             * Considero que só existem itens com 4 ou 5 digitos. O MXM faz 
              * uma loucura e coloca esses dígitos ou no fim, ou no meio da cadeia
-             * de caracteres, então tiro os numeros da frente e caso sobrem 5 dígitos
-             * eu mantenho, caso sobrem 7, eu divido por 100 e pego os 5 do meio.
+             * de caracteres com 2 zeros no final, então tiro os numeros da frente 
+             * e caso sobrem 5 dígitos eu mantenho, caso sobrem 6 ou 7, eu divido por 100 
+             * e pego assim os 5 do meio.
              */
             foreach($itens as &$item) {
                 $item = (int)$item;
-                if(strlen((string)$item)==7)
+                if(strlen((string)$item)==6 || strlen((string)$item)==7) //Itens de tamanho 5 ou 4 cadastrados errados com 2 0's a frente.
                     $item = $item/100;
             }
             $coord_with_itens = Coordination::withCount(['itens'=>function($query) use ($itens) {
