@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth','admin']], function() {
     Route::get('itens-report/page-group-user','ItensController@pageItensGroupedByUser')->name('itens-report.pagegroupeduser');   
     Route::resource('itens', 'ItensController');
     Route::get('/item_types/{type}','ItemTypesController@search');
-    
+    Route::resource('coordinations','CoordinationController');
 });
 
 
