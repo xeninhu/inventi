@@ -3,13 +3,11 @@
 @section('content')
 <div class="ui basic segment">
     @if(Session::has('successMessage'))
-        <div class="ui success message">
-            <i class="close icon"></i>
-            <div class="header">
-                Sucesso!
-            </div>
-            <p>{{Session::get('successMessage')}}</p>
-        </div>
+        @component('components.success')
+            @slot('message')
+                {{Session::get('successMessage')}}
+            @endslot
+        @endcomponent
     @endif
     <div class="ui header">Alterar dados do colaborador</div>
 

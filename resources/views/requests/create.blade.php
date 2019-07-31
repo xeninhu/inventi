@@ -3,14 +3,12 @@
 @section('content')
 
 <div class="ui basic segment">
-     @if(Session::has('success'))
-        <div class="ui success message">
-            <i class="close icon"></i>
-            <div class="header">
-                Sucesso!
-            </div>
-            <p>Movimentações solicitadas com sucesso</p>
-        </div>
+    @if(Session::has('success'))
+        @component('components.success')
+            @slot('message')
+                Movimentações solicitadas com sucesso
+            @endslot
+        @endcomponent
     @endif
 
     @if($errors->has('item_exists'))

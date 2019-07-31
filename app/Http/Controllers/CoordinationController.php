@@ -85,7 +85,7 @@ class CoordinationController extends Controller
         $coord->name = $data['name'];
         $coord->save();
 
-        $request->session()->flash('successMessage','Item cadastrado com sucesso');
+        $request->session()->flash('successMessage','Coordenação cadastrada com sucesso');
         
         return redirect("coordinations/$coord->id/edit");
     }
@@ -137,7 +137,7 @@ class CoordinationController extends Controller
                 $coord->coordinator_id = null;
            $coord->save();
    
-           $request->session()->flash('successMessage','Item alterado com sucesso');
+           $request->session()->flash('successMessage','Coordenação alterada com sucesso');
            return redirect("coordinations/$coord->id/edit");
     }
 

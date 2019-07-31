@@ -2,20 +2,17 @@
 
 @section('content')
 <div class="ui basic segment">
-
     @if(Session::has('correct_itens'))
-        <div class="ui success message">
-            <i class="close icon"></i>
-            <div class="header">
-                Sucesso!
-            </div>
-            <p>Os seguintes itens foram movidos para o usuário {{(Session::get('user'))->name}}</p>
-            <ul>
-                @foreach(Session::get('correct_itens') as $item)
-                    <li>{{$item->patrimony_number}} - {{$item->item}}</li>
-                @endforeach
-            </ul>
-        </div>
+        @component('components.success')
+            @slot('message')
+                <p>Os seguintes itens foram movidos para o usuário {{(Session::get('user'))->name}}</p>
+                <ul>
+                    @foreach(Session::get('correct_itens') as $item)
+                        <li>{{$item->patrimony_number}} - {{$item->item}}</li>
+                    @endforeach
+                </ul>
+            @endslot
+        @endcomponent
     @endif
     @if(Session::has('from_user'))
         <div class="ui warning message">
