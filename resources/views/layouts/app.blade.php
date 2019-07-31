@@ -86,6 +86,9 @@
                         <div class="item">
                             <div class="header">Administração</div>
                             <div class="menu">
+                                <a class="item" href="{{route('coordinations.index')}}">
+                                    <i class="building icon"></i> Coordenação
+                                </a>
                                 <a class="item" href="{{route('indexuser')}}">
                                     <i class="users icon"></i> Colaborador
                                 </a>

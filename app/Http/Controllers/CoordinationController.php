@@ -6,6 +6,7 @@ use App\Coordination;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CoordinationController extends Controller
 {
@@ -18,10 +19,32 @@ class CoordinationController extends Controller
     */
    protected function validator(array $data)
    {
-       return Validator::make($data, [
-           'name' => 'required',
-           'coordinator' => 'required|integer'
-       ]);
+        $rules = ['name' => 'required'];
+
+        /**
+         * Só checo coordenação se enviou id(Edição). 
+         * Criação não adiciona coordenação
+         */
+        if(isset($data['id'])) { 
+            $rules['coordinator_id'] = [
+                'required',
+                'integer'
+            ];
+            
+            /**
+             * Checa se o coordenador é da mesma coordenação.
+             * Caso o coord for 0, deixa passar pois é para coordenação sem coordenador
+             */
+            
+            if($data['coordinator_id']!=0) {
+                $rules['coordinator_id'][] = 
+                    Rule::exists('users','id')->where(function($query) use($data) {
+                        $query->where('coordination_id','=',$data['id']);
+                    });
+            }
+        }
+
+        return Validator::make($data, $rules);
    }
 
     /**
@@ -31,7 +54,9 @@ class CoordinationController extends Controller
      */
     public function index()
     {
-        //
+        $coordinations = Coordination::paginate(10);
+        return view("coordination.index",
+            ['coordinations'=>$coordinations]);
     }
 
     /**
@@ -42,8 +67,7 @@ class CoordinationController extends Controller
     public function create()
     {
         //TODO filtrar apenas usuários que não são coordenadores
-        return view("coordination.create",
-            ['users'=>User::all()]);
+        return view("coordination.create");
     }
 
     /**
@@ -59,8 +83,6 @@ class CoordinationController extends Controller
 
         $coord = new Coordination();
         $coord->name = $data['name'];
-        if($data['coordinator_id']!=0) //Id para sem coordenador | validador garante ser apenas numero
-            $coord->coordinator_id = $data['coordinator_id'];
         $coord->save();
 
         $request->session()->flash('successMessage','Item cadastrado com sucesso');
@@ -87,7 +109,12 @@ class CoordinationController extends Controller
      */
     public function edit(Coordination $coordination)
     {
-        //
+        return view("coordination.edit",
+            [ 
+                'coord'=>$coordination,
+                'users'=>User::where("coordination_id","=",$coordination->id)->get()
+            ]);
+        
     }
 
     /**
@@ -99,7 +126,19 @@ class CoordinationController extends Controller
      */
     public function update(Request $request, Coordination $coordination)
     {
-        //
+           $data = $request->all();
+           $this->validator($data)->validate();
+
+           $coord = Coordination::find($data['id']);
+           $coord->name = $data['name'];
+           if( isset($data['coordinator_id']) && $data['coordinator_id']!=0 ) //Id 0 para sem coordenador | validador garante ser apenas numero
+                $coord->coordinator_id = $data['coordinator_id'];
+            else
+                $coord->coordinator_id = null;
+           $coord->save();
+   
+           $request->session()->flash('successMessage','Item alterado com sucesso');
+           return redirect("coordinations/$coord->id/edit");
     }
 
     /**
@@ -108,8 +147,10 @@ class CoordinationController extends Controller
      * @param  \App\Coordination  $coordination
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Coordination $coordination)
+    public function destroy(Coordination $coordination, Request $request)
     {
-        //
+        Coordination::destroy($coordination->id);
+        $request->session()->flash('from-remove',true);
+        return redirect('/coordinations');
     }
 }
