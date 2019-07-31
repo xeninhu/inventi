@@ -3,13 +3,11 @@
 @section('content')
 <div class="ui basic segment">
     @if(Session::has('from-remove'))
-        <div class="ui success message">
-            <i class="close icon"></i>
-            <div class="header">
-                Sucesso!
-            </div>
-            <p>Coordenação removida com sucesso.</p>
-        </div>
+        @component('components.success')
+            @slot('message')
+                Coordenação removida com sucesso.
+            @endslot
+        @endcomponent
     @endif
     
     <div class="ui grid">
