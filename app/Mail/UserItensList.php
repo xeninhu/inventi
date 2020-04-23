@@ -30,7 +30,8 @@ class UserItensList extends Mailable
      */
     public function build()
     {
-        return $this->view('email.usersitens')
+        return $this->from("nao-responda@prodeb.ba.gov.br")
+                    ->view('email.usersitens')
                     ->with([
                         'itens' => $this->itens
                 ]);
