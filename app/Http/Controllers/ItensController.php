@@ -269,13 +269,25 @@ class ItensController extends Controller
                 ->with('itens')->get();
             $itens_alone = Item::doesntHave("user")
                 ->where("coordination_id",$request->coordination)
+                ->orderby("type_id")
                 ->get();
+        }
+        $itens_alone_array = array();
+        $last_item = null;
+        foreach($itens_alone as $item) {
+            if($item->type->type !== $last_item) {
+                $last_item = $item->type->type;
+                $itens_alone_array[$last_item] = array($item);
+            }
+            else {
+                $itens_alone_array[$last_item][] = $item;
+            }
         }
         $array_to_view = [
             "coordinations" => $coordinations,
             "coordination" => $request->coordination,
             "users" => $users,
-            "itens_alone" => $itens_alone
+            "itens_alone" => $itens_alone_array
         ];
         return view('itens-reports/pagegroupedbyuser',$array_to_view);
     }
