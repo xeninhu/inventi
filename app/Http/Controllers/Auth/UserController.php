@@ -103,6 +103,7 @@ class UserController extends Controller
     }
 
     public function sendItensMessages(Request $request) {
+
         $data = $request->all();
         $userLogged = Auth::user();
         $coordinations = $data["coordinations"];
@@ -118,7 +119,8 @@ class UserController extends Controller
         }
 
         foreach($coordinations as $coordination) {
-            dispatch(new SendUsersItens($coordination));
+            SendUsersItens::dispatch($coordination)->onQueue('itensUsuarios');
+            //dispatch(new ());
         }
         $request->session()->flash('success',true);
         return redirect('/users/send-itens-message');

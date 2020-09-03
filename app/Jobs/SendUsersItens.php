@@ -40,7 +40,6 @@ class SendUsersItens implements ShouldQueue
             ->get();
         foreach($users as $user)
             Mail::to($user->email)
-                ->from("Sistema Inventi (nao-responda@inventi.com.br)")
                 ->send(new UserItensList($user->itens));
     }
 }
